@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>psy.ia — Ton espace. Tes mots. Ton rythme.</title>
+<meta name="description" content="psy.ia, ton espace personnel de soutien émotionnel par IA, disponible 24h/24 en 6 langues, avec trois thérapeutes virtuels bienveillants. Confidentiel, sans jugement.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F3F1FB;          /* pale periwinkle */
+    --bg-soft:#FBFAFF;
+    --ink:#2B2745;         /* deep plum-indigo */
+    --ink-soft:#5B5675;
+    --line:#E4E0F3;
+    --serena:#6FA890;      /* sage — humaniste & mindfulness */
+    --alex:#5B79C4;        /* calm blue — TCC */
+    --soli:#DB6E96;        /* warm coral — inclusif ados */
+    --violet:#7A66D4;      /* unifying accent */
+    --violet-deep:#5B45B8;
+    --urgence:#C64B57;
+    --radius:22px;
+    --shadow:0 18px 50px -24px rgba(63,45,140,.35);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"Instrument Sans",system-ui,-apple-system,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.6;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  h1,h2,h3{font-family:"Fraunces",Georgia,serif;font-weight:500;line-height:1.1;letter-spacing:-.01em}
+  a{color:inherit}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+  .eyebrow{
+    font-size:.8rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--violet);margin-bottom:14px;
+  }
+
+  /* ---- Nav ---- */
+  nav{position:sticky;top:0;z-index:50;background:rgba(243,241,251,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{font-family:"Fraunces";font-size:1.4rem;font-weight:600;letter-spacing:-.02em;display:flex;align-items:center;gap:9px}
+  .logo .dot{width:11px;height:11px;border-radius:50%;background:var(--violet);box-shadow:0 0 0 4px rgba(122,102,212,.18)}
+  .nav-links{display:flex;gap:28px;font-size:.95rem;font-weight:500}
+  .nav-links a{text-decoration:none;color:var(--ink-soft);transition:color .2s}
+  .nav-links a:hover{color:var(--violet)}
+  .nav-cta{background:var(--ink);color:#fff;padding:9px 18px;border-radius:100px;text-decoration:none;font-weight:600;font-size:.9rem;transition:transform .2s,background .2s}
+  .nav-cta:hover{transform:translateY(-1px);background:var(--violet-deep)}
+  @media(max-width:760px){.nav-links{display:none}}
+
+  /* ---- Hero ---- */
+  .hero{padding:82px 0 64px;position:relative}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:center}
+  .hero h1{font-size:clamp(2.6rem,6vw,4.3rem);margin:16px 0 20px}
+  .hero h1 em{font-style:italic;color:var(--violet)}
+  .hero p.lead{font-size:1.18rem;color:var(--ink-soft);max-width:30ch;margin-bottom:30px}
+  .badges{display:flex;gap:12px;flex-wrap:wrap}
+  .badge{display:flex;align-items:center;gap:9px;background:var(--ink);color:#fff;padding:11px 18px;border-radius:14px;font-size:.9rem;font-weight:500}
+  .badge small{display:block;font-size:.68rem;opacity:.7;letter-spacing:.04em}
+  .badge strong{font-weight:600;font-size:1.02rem}
+  .hero-note{margin-top:18px;font-size:.86rem;color:var(--ink-soft)}
+
+  /* ---- Chat mock (signature) ---- */
+  .chat{background:var(--bg-soft);border:1px solid var(--line);border-radius:28px;padding:24px 22px;box-shadow:var(--shadow);position:relative}
+  .chat-head{display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:18px}
+  .avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--serena),var(--violet));flex:none}
+  .chat-head b{font-family:"Fraunces";font-weight:600;font-size:1.05rem}
+  .chat-head span{font-size:.8rem;color:var(--serena);display:flex;align-items:center;gap:6px}
+  .chat-head span::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--serena)}
+  .bubble{max-width:82%;padding:12px 16px;border-radius:18px;margin-bottom:12px;font-size:.96rem;opacity:0;animation:rise .6s ease forwards}
+  .bubble.them{background:#F0EEFA;border-bottom-left-radius:5px}
+  .bubble.me{background:var(--violet);color:#fff;margin-left:auto;border-bottom-right-radius:5px}
+  .bubble:nth-child(2){animation-delay:.15s}
+  .bubble:nth-child(3){animation-delay:.55s}
+  .bubble:nth-child(4){animation-delay:1s}
+  .chat-input{display:flex;align-items:center;gap:10px;margin-top:6px;padding-top:16px;border-top:1px solid var(--line)}
+  .chat-input .field{flex:1;background:#F0EEFA;border-radius:100px;padding:11px 16px;color:var(--ink-soft);font-size:.9rem}
+  .mic{width:40px;height:40px;border-radius:50%;background:var(--violet);flex:none;display:grid;place-items:center;color:#fff}
+  @keyframes rise{to{opacity:1;transform:translateY(0)}}
+  .bubble{transform:translateY(10px)}
+  @media(max-width:860px){.hero-grid{grid-template-columns:1fr;gap:40px}.hero{padding:56px 0 48px}}
+
+  /* ---- Section shell ---- */
+  section{padding:76px 0}
+  .sec-head{max-width:44ch;margin-bottom:44px}
+  .sec-head h2{font-size:clamp(1.9rem,4vw,2.7rem);margin-bottom:14px}
+  .sec-head p{color:var(--ink-soft);font-size:1.05rem}
+
+  /* ---- Thérapeutes ---- */
+  #therapeutes{background:linear-gradient(180deg,var(--bg),#EEEBFA)}
+  .therapists{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .t-card{background:var(--bg-soft);border-radius:var(--radius);padding:28px 24px;border:1px solid var(--line);position:relative;overflow:hidden;transition:transform .25s,box-shadow .25s}
+  .t-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+  .t-card::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:var(--c)}
+  .t-face{width:54px;height:54px;border-radius:50%;background:var(--c);opacity:.9;margin-bottom:18px;display:grid;place-items:center;color:#fff;font-family:"Fraunces";font-size:1.4rem;font-weight:600}
+  .t-card h3{font-size:1.4rem;margin-bottom:4px}
+  .t-role{font-size:.82rem;font-weight:600;color:var(--c);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
+  .t-card p{color:var(--ink-soft);font-size:.96rem}
+  @media(max-width:760px){.therapists{grid-template-columns:1fr}}
+
+  /* ---- Features ---- */
+  .features{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+  .f-card{background:var(--bg-soft);border:1px solid var(--line);border-radius:var(--radius);padding:26px}
+  .f-icon{width:44px;height:44px;border-radius:13px;background:rgba(122,102,212,.12);display:grid;place-items:center;margin-bottom:16px;color:var(--violet)}
+  .f-card h3{font-family:"Instrument Sans";font-weight:600;font-size:1.12rem;margin-bottom:7px}
+  .f-card p{color:var(--ink-soft);font-size:.95rem}
+  .f-card .langs{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+  .f-card .langs span{background:#F0EEFA;padding:4px 11px;border-radius:100px;font-size:.8rem;font-weight:500}
+  @media(max-width:660px){.features{grid-template-columns:1fr}}
+
+  /* ---- Tarifs ---- */
+  #tarifs{background:linear-gradient(180deg,#EEEBFA,var(--bg))}
+  .plans{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:760px}
+  .plan{background:var(--bg-soft);border:1px solid var(--line);border-radius:var(--radius);padding:30px 26px}
+  .plan.pro{border:2px solid var(--violet);position:relative}
+  .plan.pro .tag{position:absolute;top:-13px;left:26px;background:var(--violet);color:#fff;font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:5px 13px;border-radius:100px}
+  .plan h3{font-family:"Instrument Sans";font-weight:600;font-size:1.1rem;color:var(--ink-soft)}
+  .price{font-family:"Fraunces";font-size:2.4rem;font-weight:600;margin:6px 0 2px}
+  .price small{font-size:.95rem;color:var(--ink-soft);font-weight:400;font-family:"Instrument Sans"}
+  .plan ul{list-style:none;margin-top:20px;display:flex;flex-direction:column;gap:11px}
+  .plan li{display:flex;gap:10px;font-size:.95rem;color:var(--ink-soft)}
+  .plan li::before{content:"✓";color:var(--serena);font-weight:700;flex:none}
+  .plan.pro li::before{color:var(--violet)}
+  .trial{margin-top:14px;font-size:.82rem;color:var(--ink-soft)}
+  @media(max-width:660px){.plans{grid-template-columns:1fr}}
+
+  /* ---- Sécurité / urgence ---- */
+  #securite{background:var(--ink);color:#fff}
+  #securite .sec-head h2{color:#fff}
+  #securite .sec-head p{color:#B7B2D6}
+  .safety{display:grid;grid-template-columns:1.1fr .9fr;gap:34px;align-items:start}
+  .safe-list{display:flex;flex-direction:column;gap:18px}
+  .safe-item{display:flex;gap:14px}
+  .safe-item .k{width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.09);display:grid;place-items:center;flex:none}
+  .safe-item h3{font-family:"Instrument Sans";font-weight:600;font-size:1.03rem;color:#fff;margin-bottom:3px}
+  .safe-item p{color:#B7B2D6;font-size:.93rem}
+  .urgence{background:rgba(198,75,87,.14);border:1px solid rgba(198,75,87,.4);border-radius:var(--radius);padding:24px}
+  .urgence h3{font-family:"Instrument Sans";font-weight:600;color:#fff;font-size:1.05rem;display:flex;align-items:center;gap:9px;margin-bottom:14px}
+  .urgence h3 .pulse{width:10px;height:10px;border-radius:50%;background:var(--urgence);box-shadow:0 0 0 0 rgba(198,75,87,.6);animation:pulse 2s infinite}
+  @keyframes pulse{70%{box-shadow:0 0 0 10px rgba(198,75,87,0)}100%{box-shadow:0 0 0 0 rgba(198,75,87,0)}}
+  .urgence table{width:100%;border-collapse:collapse;font-size:.92rem}
+  .urgence td{padding:8px 0;border-bottom:1px solid rgba(255,255,255,.09);color:#D9D6EC}
+  .urgence td:last-child{text-align:right;font-weight:600;color:#fff}
+  .urgence tr:last-child td{border:none}
+  @media(max-width:760px){.safety{grid-template-columns:1fr}}
+
+  /* ---- FAQ / support ---- */
+  .faq{max-width:760px}
+  details{background:var(--bg-soft);border:1px solid var(--line);border-radius:16px;margin-bottom:12px;overflow:hidden}
+  summary{padding:19px 22px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";font-size:1.5rem;color:var(--violet);font-weight:400;transition:transform .2s}
+  details[open] summary::after{transform:rotate(45deg)}
+  details p{padding:0 22px 20px;color:var(--ink-soft);font-size:.96rem}
+  details p a{color:var(--violet);font-weight:600}
+
+  /* ---- Contact ---- */
+  #support{background:linear-gradient(180deg,var(--bg),#EEEBFA)}
+  .contact-card{background:var(--bg-soft);border:1px solid var(--line);border-radius:26px;padding:44px;text-align:center;max-width:640px;margin:0 auto;box-shadow:var(--shadow)}
+  .contact-card h2{font-size:2rem;margin-bottom:12px}
+  .contact-card p{color:var(--ink-soft);margin-bottom:26px}
+  .mail-btn{display:inline-flex;align-items:center;gap:10px;background:var(--violet);color:#fff;text-decoration:none;font-weight:600;padding:14px 28px;border-radius:100px;transition:transform .2s,background .2s}
+  .mail-btn:hover{transform:translateY(-2px);background:var(--violet-deep)}
+  .contact-meta{margin-top:22px;font-size:.86rem;color:var(--ink-soft)}
+  .contact-meta a{color:var(--violet);font-weight:600}
+
+  /* ---- Footer ---- */
+  footer{background:var(--ink);color:#B7B2D6;padding:52px 0 34px;font-size:.9rem}
+  .foot-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:24px;padding-bottom:28px;border-bottom:1px solid rgba(255,255,255,.1)}
+  .foot-top .logo{color:#fff}
+  .foot-links{display:flex;gap:26px;flex-wrap:wrap}
+  .foot-links a{color:#B7B2D6;text-decoration:none;transition:color .2s}
+  .foot-links a:hover{color:#fff}
+  .disclaimer{margin-top:24px;padding:16px 20px;background:rgba(255,255,255,.05);border-radius:14px;font-size:.84rem;line-height:1.5}
+  .disclaimer strong{color:#fff}
+  .copy{margin-top:22px;font-size:.82rem;opacity:.7}
+
+  a:focus-visible,summary:focus-visible,.nav-cta:focus-visible,.mail-btn:focus-visible{outline:3px solid var(--violet);outline-offset:3px;border-radius:6px}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto}.bubble{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-inner">
+    <div class="logo"><span class="dot"></span>psy.ia</div>
+    <div class="nav-links">
+      <a href="#therapeutes">Thérapeutes</a>
+      <a href="#fonctionnalites">Fonctionnalités</a>
+      <a href="#tarifs">Tarifs</a>
+      <a href="#faq">Aide</a>
+    </div>
+    <a href="#support" class="nav-cta">Nous contacter</a>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Soutien émotionnel par IA · 24h/24</div>
+      <h1>Ton espace.<br>Tes mots.<br><em>Ton rythme.</em></h1>
+      <p class="lead">Un espace personnel pour parler, être écouté·e et souffler — sans jugement, quand tu en as besoin.</p>
+      <div class="badges">
+        <div class="badge"><small>Bientôt sur</small><strong>App Store</strong></div>
+        <div class="badge"><small>Bientôt sur</small><strong>Google Play</strong></div>
+      </div>
+      <p class="hero-note">Gratuit pour commencer · 6 langues · Confidentiel</p>
+    </div>
+
+    <!-- Signature : bulles de conversation -->
+    <div class="chat" aria-hidden="true">
+      <div class="chat-head">
+        <div class="avatar"></div>
+        <div>
+          <b>Séréna</b>
+          <span>en ligne</span>
+        </div>
+      </div>
+      <div class="bubble them">Bonjour 🌿 Je suis là. Comment te sens-tu aujourd'hui ?</div>
+      <div class="bubble me">Un peu débordé·e, j'avais besoin d'en parler…</div>
+      <div class="bubble them">Prenons le temps. Rien ne presse ici — raconte-moi à ton rythme.</div>
+      <div class="chat-input">
+        <div class="field">Écris ou dicte tes pensées…</div>
+        <div class="mic" title="Saisie vocale">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ THÉRAPEUTES ============ -->
+<section id="therapeutes">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Trois voix, trois approches</div>
+      <h2>Choisis le·la thérapeute qui te correspond</h2>
+      <p>Chaque profil a sa personnalité et son approche. Tu passes de l'un à l'autre quand tu veux.</p>
+    </div>
+    <div class="therapists">
+      <div class="t-card" style="--c:var(--serena)">
+        <div class="t-face">S</div>
+        <h3>Séréna</h3>
+        <div class="t-role">Humaniste &amp; mindfulness</div>
+        <p>Un ton doux et apaisant pour te reconnecter à toi-même et retrouver ton calme.</p>
+      </div>
+      <div class="t-card" style="--c:var(--alex)">
+        <div class="t-face">A</div>
+        <h3>Alex</h3>
+        <div class="t-role">TCC &amp; psychologie positive</div>
+        <p>Un accompagnement structuré pour mieux comprendre tes pensées et avancer, pas à pas.</p>
+      </div>
+      <div class="t-card" style="--c:var(--soli)">
+        <div class="t-face">So</div>
+        <h3>Soli</h3>
+        <div class="t-role">Pensé·e pour les 13-25 ans</div>
+        <p>Un espace safe et inclusif, pour tous les genres et toutes les identités. Tu es le·la bienvenu·e.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FONCTIONNALITÉS ============ -->
+<section id="fonctionnalites">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Ce qui rend psy.ia unique</div>
+      <h2>Simple, à toi, et toujours disponible</h2>
+    </div>
+    <div class="features">
+      <div class="f-card">
+        <div class="f-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/></svg></div>
+        <h3>6 langues</h3>
+        <p>Exprime-toi dans ta langue. L'IA te répond toujours dans celle que tu as choisie.</p>
+        <div class="langs"><span>Français</span><span>English</span><span>Nederlands</span><span>Español</span><span>Deutsch</span><span>العربية</span></div>
+      </div>
+      <div class="f-card">
+        <div class="f-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4"/></svg></div>
+        <h3>Parle ou écris</h3>
+        <p>La saisie vocale te laisse dicter tes pensées directement, sans effort, comme une vraie conversation.</p>
+      </div>
+      <div class="f-card">
+        <div class="f-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3>Confidentiel &amp; sécurisé</h3>
+        <p>Tes conversations sont chiffrées et ne sont jamais vendues. Tu peux supprimer ton compte et toutes tes données quand tu veux.</p>
+      </div>
+      <div class="f-card">
+        <div class="f-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/></svg></div>
+        <h3>Toujours là</h3>
+        <p>Disponible jour et nuit, sans rendez-vous. Un bouton d'urgence reste accessible à tout moment.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TARIFS ============ -->
+<section id="tarifs">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Tarifs</div>
+      <h2>Commence gratuitement</h2>
+      <p>Essaie psy.ia sans payer. Passe au Premium quand tu es prêt·e — annulable à tout moment.</p>
+    </div>
+    <div class="plans">
+      <div class="plan">
+        <h3>Gratuit</h3>
+        <div class="price">0€</div>
+        <ul>
+          <li>10 messages par jour</li>
+          <li>1 thérapeute au choix</li>
+          <li>2 langues</li>
+          <li>Historique sur 7 jours</li>
+        </ul>
+      </div>
+      <div class="plan pro">
+        <span class="tag">Premium</span>
+        <h3>Premium</h3>
+        <div class="price">4,99€ <small>/ mois</small></div>
+        <ul>
+          <li>Messages illimités</li>
+          <li>Les 3 thérapeutes</li>
+          <li>6 langues</li>
+          <li>Historique illimité</li>
+          <li>Suivi d'humeur &amp; statistiques</li>
+        </ul>
+        <p class="trial">7 jours d'essai gratuit · abonnement annuel à -30%</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SÉCURITÉ & URGENCE ============ -->
+<section id="securite">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Ta sécurité d'abord</div>
+      <h2>Un espace bienveillant, encadré</h2>
+      <p>psy.ia est un outil de bien-être. Il ne pose aucun diagnostic et ne remplace pas un professionnel de santé.</p>
+    </div>
+    <div class="safety">
+      <div class="safe-list">
+        <div class="safe-item">
+          <div class="k"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div><h3>Détection de crise</h3><p>Si tu exprimes une détresse, psy.ia réagit avec bienveillance et t'oriente immédiatement vers les bons secours.</p></div>
+        </div>
+        <div class="safe-item">
+          <div class="k"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          <div><h3>Données chiffrées</h3><p>Conversations chiffrées, jamais revendues. Suppression du compte et des données à la demande (RGPD).</p></div>
+        </div>
+        <div class="safe-item">
+          <div class="k"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></div>
+          <div><h3>Aucun diagnostic</h3><p>psy.ia t'écoute et t'accompagne, mais ne pose jamais de diagnostic médical.</p></div>
+        </div>
+      </div>
+      <div class="urgence">
+        <h3><span class="pulse"></span>Besoin d'aide maintenant ?</h3>
+        <p style="color:#D9D6EC;font-size:.9rem;margin-bottom:14px">En cas d'urgence, contacte gratuitement une ligne d'écoute :</p>
+        <table>
+          <tr><td>France</td><td>3114</td></tr>
+          <tr><td>Royaume-Uni</td><td>116 123</td></tr>
+          <tr><td>Espagne</td><td>024</td></tr>
+          <tr><td>Allemagne</td><td>0800 111 0 111</td></tr>
+          <tr><td>Pays-Bas</td><td>0800 32 123</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ / AIDE ============ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Aide &amp; questions fréquentes</div>
+      <h2>Tout ce qu'il faut savoir</h2>
+    </div>
+    <div class="faq">
+      <details open>
+        <summary>psy.ia remplace-t-il un thérapeute ?</summary>
+        <p>Non. psy.ia est un outil de soutien et de bien-être. Il ne pose pas de diagnostic et ne remplace pas un professionnel de santé. En cas de détresse sévère, consulte un médecin ou appelle une ligne d'urgence.</p>
+      </details>
+      <details>
+        <summary>Mes conversations sont-elles vraiment privées ?</summary>
+        <p>Oui. Tes échanges sont chiffrés en transit et au repos, et ne sont jamais vendus à des tiers. Toi seul·e y as accès.</p>
+      </details>
+      <details>
+        <summary>Comment supprimer mon compte et mes données ?</summary>
+        <p>Depuis les paramètres de l'app, tu peux supprimer ton compte et l'ensemble de tes données à tout moment. Tu peux aussi nous écrire à l'adresse de support ci-dessous et nous nous en chargeons.</p>
+      </details>
+      <details>
+        <summary>Dans quelles langues puis-je parler ?</summary>
+        <p>Six langues au lancement : français, anglais, néerlandais, espagnol, allemand et arabe. L'IA te répond toujours dans la langue que tu choisis.</p>
+      </details>
+      <details>
+        <summary>Comment gérer ou annuler mon abonnement Premium ?</summary>
+        <p>L'abonnement se gère directement depuis ton compte App Store (iOS) ou Google Play (Android), dans la section Abonnements. Tu peux l'annuler quand tu veux ; l'accès reste actif jusqu'à la fin de la période payée.</p>
+      </details>
+      <details>
+        <summary>Que se passe-t-il si je ne vais pas bien du tout ?</summary>
+        <p>Un bouton d'urgence reste accessible en permanence dans l'app pour te rediriger vers les services de crise de ton pays. Si tu es en danger immédiat, appelle les secours de ta région sans attendre.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SUPPORT / CONTACT ============ -->
+<section id="support">
+  <div class="wrap">
+    <div class="contact-card">
+      <div class="eyebrow" style="justify-content:center">Assistance</div>
+      <h2>Une question ? On est là.</h2>
+      <p>Écris-nous pour toute question sur l'app, ton compte, ton abonnement ou tes données. On te répond dans les meilleurs délais.</p>
+      <!-- ⬇️ REMPLACE l'adresse ci-dessous par ton vrai e-mail de support -->
+      <a class="mail-btn" href="mailto:support@psy-ia.app">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+        support@psy-ia.app
+      </a>
+      <div class="contact-meta">
+        Consulte aussi notre <a href="#faq">aide &amp; FAQ</a> · <a href="POLITIQUE_DE_CONFIDENTIALITE_URL">Politique de confidentialité</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="logo"><span class="dot"></span>psy.ia</div>
+      <div class="foot-links">
+        <a href="#therapeutes">Thérapeutes</a>
+        <a href="#tarifs">Tarifs</a>
+        <a href="#faq">Aide</a>
+        <a href="#support">Contact</a>
+        <a href="POLITIQUE_DE_CONFIDENTIALITE_URL">Confidentialité</a>
+      </div>
+    </div>
+    <div class="disclaimer">
+      <strong>psy.ia est un outil de bien-être et ne remplace pas un professionnel de santé.</strong>
+      En cas de détresse sévère, consulte un médecin ou appelle le 3114 (France) ou la ligne d'urgence de ton pays.
+    </div>
+    <div class="copy">© 2026 Valeriane Moyersoen. Tous droits réservés.</div>
+  </div>
+</footer>
+
+</body>
+</html>
